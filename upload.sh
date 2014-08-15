@@ -1,5 +1,7 @@
 #! /bin/bash
 
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
 api="${1:-http://localhost:8080}"
 user="${2:-1}"
 pass="${3:-passwd}"
