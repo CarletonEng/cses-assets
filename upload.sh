@@ -21,5 +21,8 @@ find -not -path '*/.*' -type f | while read f; do
 	mime="$(file -bi "$f")"
 	echo "Uploading $f ($mime)"
 	curl -kXPUT -H"Authorization: Bearer $tok" -H"Content-Type: $mime" \
-	     --data-binary "@$f" "$api/blob"
+	     --data-binary "@$f" "$api/blob" \
+	     &
 done
+
+wait
