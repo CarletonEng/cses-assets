@@ -17,12 +17,14 @@ tok="$(curl -kXPOST -H"Content-Type: application/json" \
 	"$api/auth" | sed -rzne 's/.*"token"\s*:\s*"([0-9A-F]+\$[0-9A-F]+)".*/\1/p'
 )"
 
-find -not -path '*/.*' -type f | while read f; do
+while read f; do
 	mime="$(file -bi "$f")"
 	echo "Uploading $f ($mime)"
 	curl -kXPUT -H"Authorization: Bearer $tok" -H"Content-Type: $mime" \
 	     --data-binary "@$f" "$api/blob" \
 	     &
-done
+	
+	[ "$SYNC" ] && wait
+done < <(find -not -path '*/.*' -type f)
 
-wait
+[ "$SYNC" ] || wait
